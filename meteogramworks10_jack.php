@@ -3,7 +3,7 @@
 <script src="https://www.translucidus.weather.net/js/spin.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyCd0QBDrPtjZzibfAXUG5-Y36Ea_qdJ1fI"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&key="></script>
 <style>
 #loader1 {
     position:absolute;
