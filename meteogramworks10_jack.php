@@ -61,7 +61,7 @@
 	}
 
 	function getaddress($lat,$lng){
-		$url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=false&key=AIzaSyCd0QBDrPtjZzibfAXUG5-Y36Ea_qdJ1fI';
+		$url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.trim($lat).','.trim($lng).'&sensor=false&key=';
 		//print $url;
 		$json = @file_get_contents($url);
 		$data=json_decode($json);
