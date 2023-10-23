@@ -168,15 +168,11 @@
 		var data = new google.visualization.DataTable();		
 		data.addColumn('string', 'Date');
 		data.addColumn({type: 'string', role: 'annotation'});
-		data.addColumn('number', 'Temperature (°F)');			
-		data.addColumn('number', 'Apparent (°F)');
+		data.addColumn('number', 'Temperature (°F)');	
 		data.addColumn('number', 'Dew Point (°F)');	
-		data.addColumn('number', 'Wind (Km/h)');
-		data.addColumn('number', 'Gust (Km/h');
-		// data.addColumn('number', 'Direction');
-		data.addColumn('number', 'Cloud (%)');
-		data.addColumn('number', 'Liquid (Inch)');
 		data.addColumn('number', 'Snow (Inch)');
+		data.addColumn('number', 'Rain (1/100 Inch)');
+		
 		var olddate="";
 		if(temperaturedata[0]=="")
 		{
@@ -191,20 +187,20 @@
 			if(olddate!=datetimesplit[0])
 			{
 				//alert(hour+"="+datetimesplit[0]+"="+parseInt(temperaturedata[index]));
-				data.addRow([hour,datetimesplit[0],parseInt(temperaturedata[index]),parseInt(aptemperaturedata[index]),parseInt(temperaturedata1[index]), parseInt(windspeeddata[index]), parseInt(windgustdata[index]), parseInt(cloudamountdata[index]), parseInt(precipitationdata[index]), parseInt(precipitationsnowdata[index])]);
+				data.addRow([hour,datetimesplit[0],parseInt(temperaturedata[index]),parseInt(temperaturedata1[index]), parseInt(precipitationsnowdata[index]), parseInt(precipitationdata[index])]);
 				// data.addRow([hour,datetimesplit[0],parseInt(temperaturedata1[index])]);
 			}
 			else
 			{
 				//alert(hour+"="+parseInt(temperaturedata[index]));
-				data.addRow([hour,'',parseInt(temperaturedata[index]),parseInt(aptemperaturedata[index]),parseInt(temperaturedata1[index]), parseInt(windspeeddata[index]), parseInt(windgustdata[index]), parseInt(cloudamountdata[index]), parseInt(precipitationdata[index]), parseInt(precipitationsnowdata[index])]);
+				data.addRow([hour,'',parseInt(temperaturedata[index]),parseInt(temperaturedata1[index]), parseInt(precipitationsnowdata[index]), parseInt(precipitationdata[index])]);
 				// data.addRow([hour,'',parseInt(temperaturedata1[index])]);
 			}
 			
 			olddate=datetimesplit[0];
 
 		}
-		console.log(data);
+		
 		var title="<?php echo $address ?>";
 		var linearOptions = {
 			title: 'Meteogram - '+title,
@@ -212,15 +208,15 @@
 			focusTarget: 'category',
 			crosshair: { trigger: 'both', color: 'red'},
 			chartArea: {'width': '80%', 'height': '80%'},
-			width: 1680,
-			height: 500,		
+			width: 1700,
+			height: 700,		
 			margin: 150,	
 			hAxis: {
 				title: 'Hours'
 			},
 			vAxis: {
 				title: '',
-				ticks: [-25,0,10,20,30,40,50,60, 70,80, 90, 100]
+				ticks: [-80,0,10,20,30,40,50,60, 70,80, 90, 100]
 			},
 			axes: {
 				x: {
@@ -228,8 +224,7 @@
 				}
 			},
 			vAxes:{
-				0: {title: 'Temperature'},
-				1: {title: '%'}
+				0: {title: ''}				
 			},
 			pointSize: 10,
 			series: {
@@ -254,7 +249,8 @@
 		};
 
 		var container = document.getElementById('linear_div');
-		
+
+		var l = 0;			
 		var i=0;
 		var linearChart = new google.visualization.LineChart(container);
 	  	google.visualization.events.addListener(linearChart, 'ready', function () {
@@ -270,15 +266,15 @@
 					whiteHat.className = 'whiteHat';
 
 					// 16x16 (image size in this example)
-					whiteHat.style.top = (yPos-55) + 'px';
+					whiteHat.style.top = (yPos-220) + 'px';
 					whiteHat.style.left = (xPos) + 'px';
 					i++;
 				}
 			});
 			
-		});
+		});		
 		
-		var j=0;
+		var j=1;
 		google.visualization.events.addListener(linearChart, 'ready', function () {
     		Array.prototype.forEach.call(container.getElementsByTagName('rect'), function(rect) {
 		
@@ -291,50 +287,301 @@
 					var direction = directiondata[j];
 					
 					if((direction>=0 && direction<=10) || (direction>=350 && direction<360)){
-						whiteHat.innerHTML = 'N</br>&#8595';
+						whiteHat.innerHTML = 'N</br><p>&#8595</p>';
 					} else if(direction>=20 && direction<=30) {
-						whiteHat.innerHTML = 'N/NE';
+						whiteHat.innerHTML = 'NNE</br><p style="transform:rotate(22.5deg)">&#8595</p>';
 					} else if(direction>=40 && direction<=50) {
-						whiteHat.innerHTML = 'NE</br>&#8601';
+						whiteHat.innerHTML = 'NE</br><p>&#8601</p>';
 					} else if(direction>=60 && direction<=70) {
-						whiteHat.innerHTML = 'E/NE';
+						whiteHat.innerHTML = 'ENE</br><p style="transform:rotate(22.5deg)">&#8601</p>';
 					} else if(direction>=80 && direction<=100) {
-						whiteHat.innerHTML = 'E</br>&#8592';
+						whiteHat.innerHTML = 'E</br><p>&#8592</p>';
 					} else if(direction>=110 && direction<=120) {
-						whiteHat.innerHTML = 'E/SE';
+						whiteHat.innerHTML = 'ESE</br><p style="transform:rotate(22.5deg)">&#8592</p>';
 					} else if(direction>=130 && direction<=140) {
-						whiteHat.innerHTML = 'SE</br>&#8598';
+						whiteHat.innerHTML = 'SE</br><p>&#8598</p>';
 					} else if(direction>=150 && direction<=160) {
-						whiteHat.innerHTML = 'S/SE';
+						whiteHat.innerHTML = 'SSE</br><p style="transform:rotate(22.5deg)">&#8598</p>';
 					} else if(direction>=170 && direction<=190) {
-						whiteHat.innerHTML = 'S</br>&#8593';
+						whiteHat.innerHTML = 'S</br><p>&#8593</p>';
 					} else if(direction>=200 && direction<=210) {
-						whiteHat.innerHTML = 'S/SW';
+						whiteHat.innerHTML = 'SSW</br><p style="transform:rotate(22.5deg)">&#8593</p>';
 					} else if(direction>=220 && direction<=230) {
-						whiteHat.innerHTML = 'SW</br>&#8599';
+						whiteHat.innerHTML = 'SW</br><p>&#8599</p>';
 					} else if(direction>=240 && direction<=250) {
-						whiteHat.innerHTML = 'W/SW';
+						whiteHat.innerHTML = 'WSW</br><p style="transform:rotate(22.5deg)">&#8599</p>';
 					} else if(direction>=260 && direction<=280) {
-						whiteHat.innerHTML = 'W</br>&#8594';
+						whiteHat.innerHTML = 'W</br><p>&#8594</p>';
 					} else if(direction>=290 && direction<=300) {
-						whiteHat.innerHTML = 'W/NW';
+						whiteHat.innerHTML = 'WNW</br><p style="transform:rotate(22.5deg)">&#8594</p>';
 					} else if(direction>=310 && direction<=320) {
-						whiteHat.innerHTML = 'NW</br>&#8600';
+						whiteHat.innerHTML = 'NW</br><p>&#8600</p>';
 					} else if(direction>=330 && direction<=340) {
-						whiteHat.innerHTML = 'N/NW';
+						whiteHat.innerHTML = 'NNW</br><p style="transform:rotate(22.5deg)">&#8600</p>';
 					}
-					// whiteHat.innerHTML = directiondata[j];
-					// console.log(j);
+					
 					whiteHat.className = 'whiteHat1';
 					
 					// 16x16 (image size in this example)
 					whiteHat.style.top = (yPos + 80) + 'px';
 					whiteHat.style.left = (xPos) + 'px';
+					
 					j++;
 				}
 			});
 			
 		});
+
+		google.visualization.events.addListener(linearChart, 'ready', function () {
+    		Array.prototype.forEach.call(container.getElementsByTagName('rect'), function(rect) {
+		
+				if ((rect.getAttribute('width') === '1') && (rect.getAttribute('fill') === '#999999')) {
+					
+					var xPos = parseFloat(rect.getAttribute('x'));
+					var yPos = parseFloat(rect.getAttribute('y'));
+
+					var whiteHat = container.appendChild(document.createElement('div'));
+					if(l == 1){
+						whiteHat.innerHTML = 'Rain (inch)';
+						whiteHat.className = 'whiteHat1';
+						whiteHat.style.top = (yPos + 150) + 'px';
+						whiteHat.style.left = (xPos - 15) + 'px';
+						whiteHat.style.width = '100px';
+						whiteHat.style.fontsize = '14px';
+					}else if(l == 2){
+						whiteHat.className = 'whiteHat1';
+						whiteHat.style.top = (yPos + 150) + 'px';
+						whiteHat.style.left = (xPos + 25) + 'px';
+						whiteHat.style.width = '50px';
+						whiteHat.style.fontsize = '14px';
+						whiteHat.style.background = 'rgb(16, 150, 24)';
+					}else if(l == 3){
+						whiteHat.innerHTML = 'Snow (inch)';
+						whiteHat.className = 'whiteHat1';
+						whiteHat.style.top = (yPos + 150) + 'px';
+						whiteHat.style.left = (xPos + 15) + 'px';
+						whiteHat.style.width = '100px';
+						whiteHat.style.fontsize = '14px';
+					}else if(l == 4){
+						whiteHat.className = 'whiteHat1';
+						whiteHat.style.top = (yPos + 150) + 'px';
+						whiteHat.style.left = (xPos + 55) + 'px';
+						whiteHat.style.width = '50px';
+						whiteHat.style.fontsize = '14px';
+						whiteHat.style.background = 'rgb(255, 153, 0)';
+					}else if(l == 5){
+						whiteHat.innerHTML = 'Cloud (%)';
+						whiteHat.className = 'whiteHat1';
+						whiteHat.style.top = (yPos + 150) + 'px';
+						whiteHat.style.left = (xPos +45) + 'px';
+						whiteHat.style.width = '100px';
+						whiteHat.style.fontsize = '14px';
+					}else if(l == 6){
+						whiteHat.className = 'whiteHat1';
+						whiteHat.style.top = (yPos + 150) + 'px';
+						whiteHat.style.left = (xPos + 85) + 'px';
+						whiteHat.style.width = '50px';
+						whiteHat.style.fontsize = '14px';
+						whiteHat.style.background = 'rgb(0, 153, 198)';
+					}else if(l == 7){
+						whiteHat.innerHTML = 'Gust (mph)';
+						whiteHat.className = 'whiteHat1';
+						whiteHat.style.top = (yPos + 150) + 'px';
+						whiteHat.style.left = (xPos + 75) + 'px';
+						whiteHat.style.width = '100px';
+						whiteHat.style.fontsize = '14px';
+					}else if(l == 8){
+						whiteHat.className = 'whiteHat1';
+						whiteHat.style.top = (yPos + 150) + 'px';
+						whiteHat.style.left = (xPos + 115) + 'px';
+						whiteHat.style.width = '50px';
+						whiteHat.style.fontsize = '14px';
+						whiteHat.style.background = 'rgb(153, 0, 153)';
+					}else if(l ==9){
+						whiteHat.innerHTML = 'Wind (mph)';
+						whiteHat.className = 'whiteHat1';
+						whiteHat.style.top = (yPos + 150) + 'px';
+						whiteHat.style.left = (xPos + 105) + 'px';
+						whiteHat.style.width = '100px';
+						whiteHat.style.fontsize = '14px';
+					}else if(l == 10){
+						whiteHat.className = 'whiteHat1';
+						whiteHat.style.top = (yPos + 150) + 'px';
+						whiteHat.style.left = (xPos + 145) + 'px';
+						whiteHat.style.width = '50px';
+						whiteHat.style.fontsize = '14px';
+						whiteHat.style.background = 'rgb(255, 128, 223)';
+					}else if(l == 0){
+						whiteHat.className = 'whiteHat1';
+						whiteHat.style.top = (yPos ) + 'px';
+						whiteHat.style.left = (xPos-80) + 'px';
+						whiteHat.style.width = '42px';
+						whiteHat.style.fontsize = '14px';
+						whiteHat.style.background = 'white';
+					}
+					
+					l++;
+				}
+			});
+			
+		});
+
+		var r=0;		
+	  	google.visualization.events.addListener(linearChart, 'ready', function () {
+    		Array.prototype.forEach.call(container.getElementsByTagName('rect'), function(rect) {
+		
+				if ((rect.getAttribute('width') === '1') && (rect.getAttribute('fill') === '#999999')) {
+					
+					var xPos = parseFloat(rect.getAttribute('x'));
+					var yPos = parseFloat(rect.getAttribute('y'));
+
+					var whiteHat = container.appendChild(document.createElement('div'));
+					if(precipitationdata[r] != null){
+						whiteHat.innerHTML = precipitationdata[r];
+					}else{
+						whiteHat.innerHTML = ''
+					}
+					
+					whiteHat.className = 'whiteHat1';
+
+					// 16x16 (image size in this example)
+					whiteHat.style.top = (yPos-170) + 'px';
+					whiteHat.style.left = (xPos-20) + 'px';
+					whiteHat.style.background = 'rgb(16, 150, 24)';					
+					whiteHat.style.width = '60px';		
+					whiteHat.style.fontsize = '16px';			
+					
+					r++;
+				}
+			});
+			
+		});
+
+		var s=0;		
+	  	google.visualization.events.addListener(linearChart, 'ready', function () {
+    		Array.prototype.forEach.call(container.getElementsByTagName('rect'), function(rect) {
+		
+				if ((rect.getAttribute('width') === '1') && (rect.getAttribute('fill') === '#999999')) {
+					
+					var xPos = parseFloat(rect.getAttribute('x'));
+					var yPos = parseFloat(rect.getAttribute('y'));
+
+					var whiteHat = container.appendChild(document.createElement('div'));
+					if(precipitationsnowdata[s] != null){
+						whiteHat.innerHTML = precipitationsnowdata[s];
+					}else{
+						whiteHat.innerHTML = ''
+					}
+					
+					whiteHat.className = 'whiteHat1';
+
+					// 16x16 (image size in this example)
+					whiteHat.style.top = (yPos-140) + 'px';
+					whiteHat.style.left = (xPos-20) + 'px';
+					whiteHat.style.background = 'rgb(255, 153, 0)';					
+					whiteHat.style.width = '60px';		
+					whiteHat.style.fontsize = '16px';			
+					
+					s++;
+				}
+			});
+			
+		});
+
+		var k=0;		
+	  	google.visualization.events.addListener(linearChart, 'ready', function () {
+    		Array.prototype.forEach.call(container.getElementsByTagName('rect'), function(rect) {
+		
+				if ((rect.getAttribute('width') === '1') && (rect.getAttribute('fill') === '#999999')) {
+					
+					var xPos = parseFloat(rect.getAttribute('x'));
+					var yPos = parseFloat(rect.getAttribute('y'));
+
+					var whiteHat = container.appendChild(document.createElement('div'));
+					if(cloudamountdata[k] != null){
+						whiteHat.innerHTML = cloudamountdata[k];
+					}else{
+						whiteHat.innerHTML = ''
+					}
+					
+					whiteHat.className = 'whiteHat1';
+
+					// 16x16 (image size in this example)
+					whiteHat.style.top = (yPos-110) + 'px';
+					whiteHat.style.left = (xPos-20) + 'px';
+					whiteHat.style.background = 'rgb(0, 153, 198)';					
+					whiteHat.style.width = '60px';		
+					whiteHat.style.fontsize = '16px';			
+					
+					k++;
+				}
+			});
+			
+		});
+
+		var g = 0;
+		google.visualization.events.addListener(linearChart, 'ready', function () {
+    		Array.prototype.forEach.call(container.getElementsByTagName('rect'), function(rect) {
+		
+				if ((rect.getAttribute('width') === '1') && (rect.getAttribute('fill') === '#999999')) {
+					
+					var xPos = parseFloat(rect.getAttribute('x'));
+					var yPos = parseFloat(rect.getAttribute('y'));
+
+					var whiteHat = container.appendChild(document.createElement('div'));
+					if(windgustdata[g] != null){
+						whiteHat.innerHTML = windgustdata[g];
+					}else{
+						whiteHat.innerHTML = ''
+					}
+					
+					whiteHat.className = 'whiteHat1';
+
+					// 16x16 (image size in this example)
+					whiteHat.style.top = (yPos-80) + 'px';
+					whiteHat.style.left = (xPos-20) + 'px';
+					whiteHat.style.background = 'rgb(153, 0, 153)';
+					whiteHat.style.width = '60px';		
+					whiteHat.style.fontsize = '16px';			
+					
+					g++;
+				}
+			});
+			
+		});
+
+		var w = 0;
+		google.visualization.events.addListener(linearChart, 'ready', function () {
+    		Array.prototype.forEach.call(container.getElementsByTagName('rect'), function(rect) {
+		
+				if ((rect.getAttribute('width') === '1') && (rect.getAttribute('fill') === '#999999')) {
+					
+					var xPos = parseFloat(rect.getAttribute('x'));
+					var yPos = parseFloat(rect.getAttribute('y'));
+
+					var whiteHat = container.appendChild(document.createElement('div'));
+					if(windspeeddata[w] != null){
+						whiteHat.innerHTML = windspeeddata[w];
+					}else{
+						whiteHat.innerHTML = ''
+					}
+					
+					whiteHat.className = 'whiteHat1';
+
+					// 16x16 (image size in this example)
+					whiteHat.style.top = (yPos-50) + 'px';
+					whiteHat.style.left = (xPos-20) + 'px';
+					whiteHat.style.background = 'rgb(255, 128, 223)';
+					whiteHat.style.width = '60px';		
+					whiteHat.style.fontsize = '16px';			
+					
+					w++;
+				}
+			});
+			
+		});
+
+		
  
 		linearChart.draw(data, google.charts.Line.convertOptions(linearOptions));		
 		
@@ -358,22 +605,16 @@
 	console.log(data);
 	var precipdate=[];
 			
-	$(data).find('temperature').first().find('value').each(function(){
-		//$(this).text();
-		
-		temperaturedata.push($(this).text().toString());
-		//i=i+1;
+	$(data).find('temperature').first().find('value').each(function(){		
+		temperaturedata.push($(this).text().toString());		
 	});	
 
-	$(data).find('temperature').eq(1).find('value').each(function(){
-		//$(this).text();
-		
-		temperaturedata1.push($(this).text().toString());
-		//i=i+1;
+	$(data).find('temperature').eq(1).find('value').each(function(){		
+		temperaturedata1.push($(this).text().toString());		
 	});	
-	// console.log(temperaturedata1);
+	
 	var cc = 0;
-	$(data).find('precipitation').first().find('value').each(function(){
+	$(data).find('precipitation').eq(0).find('value').each(function(){
 		var amountliquid = $(this).text().toString();
 		precipitationdata.push(amountliquid);
 		cc++;
@@ -381,8 +622,8 @@
 			precipitationdata.push(amountliquid);
 		}
 		
-	})
-	console.log($(data).find('precipitation').first().find('value').length);
+	});
+	
 	var cc = 0;
 	$(data).find('precipitation').eq(1).find('value').each(function(){
 		var amountsnow = $(this).text().toString();
@@ -390,50 +631,40 @@
 		if(cc<$(data).find('precipitation').first().find('value').length){
 			precipitationsnowdata.push(amountsnow);
 		}
-	})
-	// console.log(precipitationdata);
+	});	
+
+	$(data).find('cloud-amount').eq(0).find('value').each(function(){
+		cloudamountdata.push($(this).text().toString());
+	});
 
 	$(data).find('direction').find('value').each(function(){
 		directiondata.push($(this).text().toString());
-	})
-	// console.log("directiondata");
-	// console.log(directiondata);
-
+	});
+	
 	$(data).find('cloud-amount').find('value').each(function(){
 		cloudamountdata.push($(this).text().toString());
-	})
-	// console.log(cloudamountdata);
-
-	$(data).find('time-layout').first().find('start-valid-time').each(function(){
-		
-		var timesplit=$(this).text().toString().split("T");
-		
+	});
+	
+	$(data).find('time-layout').first().find('start-valid-time').each(function(){		
+		var timesplit=$(this).text().toString().split("T");		
 		completedate.push($(this).text().toString());
 	});
 
-	$(data).find('time-layout').eq(1).find('start-valid-time').each(function(){
-		
-		precipdate.push($(this).text().toString());
-		
+	$(data).find('time-layout').eq(1).find('start-valid-time').each(function(){		
+		precipdate.push($(this).text().toString());		
 	});	
 
 	$(data).find('wind-speed').find('value').each(function(){
-		windspeeddata.push($(this).text().toString());
-		// var direct = $(this).text().toString();		
-	})
-	// console.log(windspeeddata);
-
-	$(data).find('conditions-icon').first().find('icon-link').each(function(){
-		
-		images.push($(this).text().toString());
-		
+		windspeeddata.push($(this).text().toString());		
 	});
-	// console.log(images);
+	
+	$(data).find('conditions-icon').first().find('icon-link').each(function(){		
+		images.push($(this).text().toString());		
+	});
 	
 	google.charts.setOnLoadCallback(drawChart);
 
 	var data1=<?php echo json_encode($output1) ?>;		
-	console.log(data1);
 
 	var maximumdata = [];
 	var maximumdate = [];
@@ -445,17 +676,17 @@
 	$(data1).find('temperature').eq(2).find('value').each(function(){		
 		aptemperaturedata.push($(this).text().toString());		
 	});	
-	console.log(aptemperaturedata);
+
 	var att1 = $(data1).find('temperature').eq(2).attr('time-layout');
 
 	$(data1).find('temperature').eq(0).find('value').each(function(){
 		maximumdata.push($(this).text().toString());
 	});
+
 	$(data1).find('time-layout').eq(0).find('start-valid-time').each(function(){
 		maximumdate.push($(this).text().toString());
 	});
-	console.log(maximumdate);
-
+	
 	$(data1).find('temperature').eq(1).find('value').each(function(){
 		minimumdata.push($(this).text().toString());
 	});
@@ -463,20 +694,12 @@
 		minimumdate.push($(this).text().toString());
 	});
 	var cc = 0;
-	$(data1).find('wind-speed').eq(0).find('value').each(function(){
-		// var amountgust = $(this).text().toString();
-		// windgustdata.push(amountgust);
-		// if(cc<$(data).find('precipitation').first().find('value').length){
-		// 	windgustdata.push(amountgust);
-		// }
+	$(data1).find('wind-speed').eq(0).find('value').each(function(){		
 		windgustdata.push($(this).text().toString());
 	});
-	$(data1).find('time-layout').eq(4).find('start-valid-time').each(function(){
-		
+	$(data1).find('time-layout').eq(4).find('start-valid-time').each(function(){		
 		windgustdate.push($(this).text().toString());
 	});
-	console.log(windgustdata);
-	console.log(windgustdate);
 	
 </script>
 
